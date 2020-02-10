@@ -10,6 +10,11 @@
 import UIKit
 
 final class DataSourceMock: DataSource {
+    static func fetch<DecodingType>(stringURL: String,
+                                    completion: @escaping (Result<DecodingType, Error>) -> Void) where DecodingType : Decodable {
+        
+    }
+    
     
     private static var collectionState: CollectionState = .loading
     

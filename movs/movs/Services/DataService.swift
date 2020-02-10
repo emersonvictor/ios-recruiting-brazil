@@ -66,8 +66,21 @@ final class DataService {
                         self.genres[genre.id] = genre.name
                     }
                     
-                    self.dataSource.fetchPopularMovies(of: page) { (result) in
-                        switch result {
+//                    self.dataSource.fetchPopularMovies(of: page) { (result) in
+//                        switch result {
+//                        case .failure:
+//                            completion(.loadError)
+//                        case .success(let moviesRequest):
+//                            let movies = moviesRequest.movies.map { (movieDTO) -> Movie in
+//                                return Movie(movie: movieDTO)
+//                            }
+//                            self.movies.append(contentsOf: movies)
+//                            completion(.loadSuccess)
+//                        }
+//                    }
+                    
+                    self.dataSource.fetch(stringURL: "https://api.themoviedb.org/3/movie/popular?api_key=ba993d6b1312f03c80a322c3e00fab4d&page=1") { (test: Result<MoviesRequestDTO, Error>) in
+                        switch test {
                         case .failure:
                             completion(.loadError)
                         case .success(let moviesRequest):
