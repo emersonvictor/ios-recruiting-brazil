@@ -21,7 +21,7 @@ class FavoritesController: UIViewController {
     
     // MARK: - Attributes
     lazy var screen = FavoritesScreen(controller: self)
-    let dataService = DataService.shared
+    let dataRepository = DataRepository()
     var searchFilteredBy = ""
     var filters: [FilterType: String] = [:]
     var favorites: [Movie] = [] {
@@ -37,24 +37,24 @@ class FavoritesController: UIViewController {
         didSet {
             switch self.collectionState {
             case .loading:
-                self.dataService.loadFavorites { (state) in
+                self.dataRepository.loadFavorites { (bool) in
                     // Set state according to filter existence and load result
-                    if state == .loadSuccess && !(self.filters.isEmpty && self.searchFilteredBy.isEmpty) {
+                    if bool && !(self.filters.isEmpty && self.searchFilteredBy.isEmpty) {
                         self.collectionState = .filtered
                     } else {
-                        self.collectionState = state
+                        self.collectionState = bool ? .loadSuccess : .loadError
                         self.screen.hideButton()
                     }
                 }
             case .loadSuccess:
-                self.favorites = self.dataService.favorites
+                self.favorites = self.dataRepository.localStorage.favorites
             case .loadError:
                 self.screen.showErrorView()
             case .normal:
                 self.screen.presentEmptySearch(false)
-                self.favorites = self.dataService.favorites
+                self.favorites = self.dataRepository.localStorage.favorites
             case .filtered:
-                self.favorites = self.dataService.favorites.filter({ (movie) -> Bool in
+                self.favorites = self.dataRepository.localStorage.favorites.filter({ (movie) -> Bool in
                     // Movie match status
                     var isMatching = true
                     
@@ -179,7 +179,7 @@ extension FavoritesController: UITableViewDelegate {
             tableView.beginUpdates()
             let movie = self.favorites.remove(at: indexPath.row)
             movie.isFavorite = false
-            self.dataService.removeFromFavorites(movie.id)
+            self.dataRepository.remove(movie.id)
             tableView.deleteRows(at: [indexPath], with: .left)
             tableView.endUpdates()
         }

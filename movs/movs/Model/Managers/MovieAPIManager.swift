@@ -1,5 +1,5 @@
 //
-//  MovieAPIService.swift
+//  MovieAPIManager.swift
 //  movs
 //
 //  Created by Emerson Victor on 02/12/19.
@@ -9,10 +9,10 @@
 import Foundation
 import UIKit
 
-final class MovieAPIService {
-    func fetch<DecodingType: Decodable>(from url: URL,
+struct APIManager {
+    func fetch<DecodingType: Decodable>(endpoint: Endpoint,
                                         completion: @escaping (Result<DecodingType, Error>) -> Void) {
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
+        URLSession.shared.dataTask(with: endpoint.url!) { (data, response, error) in
             let defaultError = NSError(domain: "error", code: 0, userInfo: nil)
             
             guard let _ = response, let data = data, error == nil else {
@@ -29,9 +29,9 @@ final class MovieAPIService {
         }.resume()
     }
     
-    func fetchPoster(from url: URL,
+    func fetchPoster(endpoint: Endpoint,
                      completion: @escaping (Result<UIImage, Error>) -> Void) {
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
+        URLSession.shared.dataTask(with: endpoint.url!) { (data, response, error) in
             if let error = error {
                 completion(.failure(error))
                 return

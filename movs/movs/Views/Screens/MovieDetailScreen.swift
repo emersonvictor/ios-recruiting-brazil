@@ -102,11 +102,11 @@ class MovieDetailScreen: UIView {
     @objc func didFavoriteMovie() {
         self.favoriteButton.isSelected = !self.favoriteButton.isSelected
         self.movie.isFavorite = !self.movie.isFavorite
-        let dataService = DataService.shared
+        let dataRepository = DataRepository()
         if self.favoriteButton.isSelected {
-            dataService.addToFavorites(self.movie.id)
+            dataRepository.add(self.movie.id)
         } else {
-            dataService.removeFromFavorites(self.movie.id)
+            dataRepository.remove(self.movie.id)
         }
     }
 }

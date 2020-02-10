@@ -19,6 +19,7 @@ class Movie {
     var isFavorite: Bool
     
     init(movie: MovieDTO) {
+        let dataRepository = DataRepository()
         self.id = movie.id
         self.title = movie.title ?? ""
         self.releaseDate = movie.releaseDate == nil ? "" : String(movie.releaseDate!.prefix(4))
@@ -28,12 +29,13 @@ class Movie {
         self.genres = movie.genreIDs == nil ?
             Set([]) :
             Set(movie.genreIDs!.map({ (id) -> String in
-                return DataService.shared.genres[id] ?? ""
+                return dataRepository.localStorage.genres[id] ?? ""
             }))
-        self.isFavorite = DataService.shared.movieIsFavorite(movie.id)
+        self.isFavorite = dataRepository.isFavorite(movie.id)
     }
     
     init(movie: MovieDetailDTO) {
+        let dataRepository = DataRepository()
         self.id = movie.id
         self.title = movie.title ?? ""
         self.releaseDate = movie.releaseDate == nil ? "" : String(movie.releaseDate!.prefix(4))
@@ -45,7 +47,7 @@ class Movie {
             Set(movie.genres!.map({ (genre) -> String in
                 return genre.name
             }))
-        self.isFavorite = DataService.shared.movieIsFavorite(movie.id)
+        self.isFavorite = dataRepository.isFavorite(movie.id)
     }
     
     func has(_ value: String, for key: FilterType) -> Bool {

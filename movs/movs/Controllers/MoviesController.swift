@@ -11,7 +11,7 @@ import UIKit
 class MoviesController: UIViewController {
     // MARK: - Attributes
     lazy var screen = MoviesScreen(controller: self)
-    let dataService = DataService.shared
+    let dataRespository = DataRepository()
     var movies: [Movie] = []
     var nextPage: Int = 1
     var searchFilteredBy = ""
@@ -22,22 +22,22 @@ class MoviesController: UIViewController {
             switch self.collectionState {
             case .loading:
                 if self.nextPage == 1 {
-                    self.dataService.loadMovies(of: self.nextPage) { (state) in
-                        self.collectionState = state
+                    self.dataRespository.loadMovies(of: self.nextPage) { (bool) in
+                        self.collectionState = bool ? .loadSuccess : .loadError
                     }
                 } else {
                     self.collectionState = .normal
                 }
             case .loadSuccess:
                 self.nextPage += 1
-                self.movies = self.dataService.movies
+                self.movies = self.dataRespository.localStorage.movies
             case .loadError:
                 self.screen.showErrorView()
             case .normal:
                 self.screen.presentEmptySearch(false)
-                self.movies = self.dataService.movies
+                self.movies = self.dataRespository.localStorage.movies
             case .filtered:
-                self.movies = self.dataService.movies.filter({ (movie) -> Bool in
+                self.movies = self.dataRespository.localStorage.movies.filter({ (movie) -> Bool in
                     return movie.title.lowercased().contains(self.searchFilteredBy.lowercased())
                 })
                 
@@ -122,8 +122,8 @@ extension MoviesController: UICollectionViewDelegate {
                         willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
         if indexPath.row == self.movies.count - 1 && self.collectionState != .filtered {
-            self.dataService.loadMovies(of: self.nextPage) { (state) in
-                self.collectionState = state
+            self.dataRespository.loadMovies(of: self.nextPage) { (bool) in
+                self.collectionState = bool ? .loadSuccess : .loadError
             }
         }
     }

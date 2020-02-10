@@ -66,9 +66,9 @@ class MovieCell: UICollectionViewCell {
         self.movie = movie
         self.title.text = movie.title
         self.favoriteButton.isSelected = movie.isFavorite
-        let dataService = DataService.shared
+        let dataRespository = DataRepository()
         if let posterPath =  movie.posterPath {
-            dataService.loadPosterImage(with: posterPath) { (image) in
+            dataRespository.loadPosterImage(with: posterPath) { (image) in
                 movie.posterImage = image
                 DispatchQueue.main.async {
                     self.posterImage.image = image
@@ -93,13 +93,13 @@ class MovieCell: UICollectionViewCell {
         }
         
         self.favoriteButton.isSelected = !self.favoriteButton.isSelected
-        let dataService = DataService.shared
+        let dataRepository = DataRepository()
         movie.isFavorite = !movie.isFavorite
         
         if self.favoriteButton.isSelected {
-            dataService.addToFavorites(movie.id)
+            dataRepository.add(movie.id)
         } else {
-            dataService.removeFromFavorites(movie.id)
+            dataRepository.remove(movie.id)
         }
     }
 }

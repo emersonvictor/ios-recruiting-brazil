@@ -11,7 +11,7 @@ import UIKit
 class FilterController: UIViewController {
     // MARK: - Attributes
     lazy var screen = FilterScreen(controller: self)
-    let dataService = DataService.shared
+    let dataRespository = DataRepository()
     let filterType: FilterType
     var selectedValue: String?
     var filterValues: [String] = []
@@ -51,7 +51,7 @@ class FilterController: UIViewController {
     func createFilterValues(for type: FilterType) -> [String] {
         switch type {
         case .date:
-            let movieMinYear = self.dataService.favorites.min { (lmovie, rmovie) -> Bool in
+            let movieMinYear = self.dataRespository.localStorage.favorites.min { (lmovie, rmovie) -> Bool in
                 return Int(lmovie.releaseDate)! < Int(rmovie.releaseDate)!
             }
             
@@ -62,7 +62,7 @@ class FilterController: UIViewController {
                 return []
             }
         case .genre:
-            return Array(self.dataService.genres.values).sorted()
+            return Array(self.dataRespository.localStorage.genres.values).sorted()
         }
     }
 }
