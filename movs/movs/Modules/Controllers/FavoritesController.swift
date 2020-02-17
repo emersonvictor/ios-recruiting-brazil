@@ -33,64 +33,9 @@ class FavoritesController: UIViewController {
     }
     
     // MARK: - Collection state
-    var collectionState: CollectionState = .loading {
+    var favoritesCollectionState: FavoritesCollectionState = .loading {
         didSet {
-            switch self.collectionState {
-            case .loading:
-                self.dataRepository.loadFavorites { (bool) in
-                    // Set state according to filter existence and load result
-                    if bool && !(self.filters.isEmpty && self.searchFilteredBy.isEmpty) {
-                        self.collectionState = .filtered
-                    } else {
-                        self.collectionState = bool ? .loadSuccess : .loadError
-                        self.screen.hideButton()
-                    }
-                }
-            case .loadSuccess:
-                self.favorites = self.dataRepository.localStorage.favorites
-            case .loadError:
-                self.screen.showErrorView()
-            case .normal:
-                self.screen.presentEmptySearch(false)
-                self.favorites = self.dataRepository.localStorage.favorites
-            case .filtered:
-                self.favorites = self.dataRepository.localStorage.favorites.filter({ (movie) -> Bool in
-                    // Movie match status
-                    var isMatching = true
-                    
-                    // Apply filters
-                    self.filters.forEach { (key, value) in
-                        if isMatching == true {
-                            isMatching = movie.has(value, for: key)
-                        }
-                    }
-                    
-                    // Apply search
-                    if !self.searchFilteredBy.isEmpty && isMatching == true {
-                        isMatching = movie.title.lowercased().contains(self.searchFilteredBy.lowercased())
-                    }
-                    
-                    return isMatching
-                })
-                
-                // Show button if has filters
-                if !self.filters.isEmpty {
-                    self.screen.showButton()
-                }
-                
-                // Show exeption screen if filters results is empty
-                if self.favorites.count == 0 {
-//                    self.screen.presentEmptySearch(true, with: self.searchFilteredBy)
-                } else {
-                    self.screen.presentEmptySearch(false)
-                }
-            }
-            
-            if self.collectionState != .loading {
-                DispatchQueue.main.async {
-                    self.screen.favoritesTableView.reloadData()
-                }
-            }
+            self.didSetCollectionState(to: self.favoritesCollectionState)
         }
     }
     
@@ -105,11 +50,12 @@ class FavoritesController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.largeTitleDisplayMode = .always
+        self.favoritesCollectionState = .loading
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.collectionState = .loading
+        self.favoritesCollectionState = .loading
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -118,7 +64,7 @@ class FavoritesController: UIViewController {
     
     // MARK: - Table view reloading from refresh controll
     @objc func reloadTableView(_ sender: UIRefreshControl) {
-        self.collectionState = .loading
+        self.favoritesCollectionState = .loading
         sender.endRefreshing()
     }
     
@@ -131,25 +77,98 @@ class FavoritesController: UIViewController {
     @objc func removeFilters() {
         self.filters = [:]
         self.searchFilteredBy = ""
-        self.collectionState = .loading
+        self.screen.hideButton()
+        self.favoritesCollectionState = .loaded
+    }
+}
+
+// MARK: - Handle collection view states
+extension FavoritesController {
+    // MARK: - Collection view reloading from refresh controll
+    @objc func reloadCollectionView(_ sender: UIRefreshControl) {
+        self.favoritesCollectionState = .loading
+        sender.endRefreshing()
+    }
+    
+    // MARK: - Did set collection view state
+    func didSetCollectionState(to state: FavoritesCollectionState) {
+        switch state {
+        case .loading:
+            self.screen.hideErrorView()
+            self.dataRepository.loadFavorites { (bool) in
+                // Set state according to filter existence and load result
+                if bool && !(self.filters.isEmpty && self.searchFilteredBy.isEmpty) {
+                    self.favoritesCollectionState = .filtered
+                } else {
+                    self.favoritesCollectionState = bool ? .loaded : .error(.loading)
+                    self.screen.hideButton()
+                }
+            }
+        case .loaded:
+            self.favorites = self.dataRepository.localStorage.favorites
+        case .error(let errorType):
+            switch errorType {
+            case .loading:
+                self.screen.presentErrorView(imageNamed: "Error",
+                                             title: "An error has occurred. Please try again")
+            case .filter:
+                self.screen.presentErrorView(imageNamed: "EmptySearch",
+                                             title: "Your search returned no results")
+            }
+        case .filtered:
+            self.favorites = self.applyFilters(into: self.dataRepository.localStorage.favorites)
+            
+            // Show button if has filters
+            if !self.filters.isEmpty {
+                self.screen.showButton()
+            }
+            
+            // Show exeption screen if filters results is empty
+            if self.favorites.count == 0 {
+                self.screen.presentErrorView(imageNamed: "EmptySearch",
+                                             title: "Your search returned no results")
+            } else {
+                self.screen.hideErrorView()
+            }
+            
+            DispatchQueue.main.async {
+                self.screen.favoritesTableView.reloadData()
+            }
+        }
+        
+        if state == .loaded || state == .filtered {
+            DispatchQueue.main.async {
+                self.screen.favoritesTableView.reloadData()
+            }
+        }
+    }
+    
+    // MARK: - Collection state
+    enum FavoritesCollectionState: Equatable {
+        case loading, loaded, filtered
+        case error(ErrorType)
+    }
+    
+    enum ErrorType {
+        case filter, loading
     }
 }
 
 // MARK: - Table view data source
 extension FavoritesController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch self.collectionState {
+        switch self.favoritesCollectionState {
         case .loading:
-            return 1
-        case .loadError:
+            return self.favorites.count == 0 ? 1 : self.favorites.count
+        case .error:
             return 0
-        case .loadSuccess, .normal, .filtered:
+        case .loaded, .filtered:
             return self.favorites.count
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if self.collectionState == .loading {
+        if self.favoritesCollectionState == .loading {
             let cell = tableView.dequeueReusableCell(withIdentifier: "FavoriteMovieCell", for: indexPath)
             return cell
         }
@@ -193,15 +212,42 @@ extension FavoritesController: UITableViewDelegate {
     }
 }
 
-// MARK: - Search results updating
+// MARK: - Filters
 extension FavoritesController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         self.searchFilteredBy = searchController.searchBar.text ?? ""
         // Set state according to filter existence
         if self.searchFilteredBy.isEmpty && self.filters.isEmpty {
-            self.collectionState = .normal
+            self.favoritesCollectionState = .loaded
         } else {
-            self.collectionState = .filtered
+            self.favoritesCollectionState = .filtered
         }
+    }
+    
+    func applyFilters(into favorites: [Movie]) -> [Movie] {
+        var movies = favorites
+        
+        // Applu filters
+        movies = movies.filter({ (movie) -> Bool in
+            var isMatching = true
+            
+            for (key, value) in self.filters {
+                if !isMatching {
+                    break
+                }
+                
+                isMatching = movie.has(value, for: key)
+            }
+            return isMatching
+        })
+        
+        // Apply search
+        if self.searchFilteredBy != "" {
+            movies = movies.filter({ (movie) -> Bool in
+                return movie.title.lowercased().contains(self.searchFilteredBy.lowercased())
+            })
+        }
+        
+        return movies
     }
 }

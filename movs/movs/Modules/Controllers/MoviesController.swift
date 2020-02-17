@@ -9,51 +9,16 @@
 import UIKit
 
 class MoviesController: UIViewController {
+    
     // MARK: - Attributes
     lazy var screen = MoviesScreen(controller: self)
-    let dataRespository = DataRepository()
+    let dataRepository = DataRepository()
     var movies: [Movie] = []
     var nextPage: Int = 1
     var searchFilteredBy = ""
-    
-    // MARK: - Collection state
-    var collectionState: CollectionState = .loading {
+    var moviesCollectionState: MoviesCollectionState = .loading {
         didSet {
-            switch self.collectionState {
-            case .loading:
-                if self.nextPage == 1 {
-                    self.dataRespository.loadMovies(of: self.nextPage) { (bool) in
-                        self.collectionState = bool ? .loadSuccess : .loadError
-                    }
-                } else {
-                    self.collectionState = .normal
-                }
-            case .loadSuccess:
-                self.nextPage += 1
-                self.movies = self.dataRespository.localStorage.movies
-            case .loadError:
-                self.screen.showErrorView()
-            case .normal:
-                self.screen.presentEmptySearch(false)
-                self.movies = self.dataRespository.localStorage.movies
-            case .filtered:
-                self.movies = self.dataRespository.localStorage.movies.filter({ (movie) -> Bool in
-                    return movie.title.lowercased().contains(self.searchFilteredBy.lowercased())
-                })
-                
-                if self.movies.count == 0 {
-                    self.screen.presentEmptySearch(true)
-                } else {
-                    self.screen.presentEmptySearch(false)
-                }
-            }
-            
-            // Reload collection view if not loading or the first time
-            if self.collectionState != .loading || self.nextPage != 1 {
-                DispatchQueue.main.async {
-                    self.screen.moviesCollectionView.reloadData()
-                }
-            }
+            self.didSetCollectionState(to: self.moviesCollectionState)
         }
     }
     
@@ -67,17 +32,71 @@ class MoviesController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.largeTitleDisplayMode = .always
+        self.moviesCollectionState = .loading
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        self.collectionState = .loading
         super.viewWillAppear(animated)
     }
-    
+}
+
+// MARK: - Handle collection view states
+extension MoviesController {
     // MARK: - Collection view reloading from refresh controll
     @objc func reloadCollectionView(_ sender: UIRefreshControl) {
-        self.collectionState = .loading
+        self.moviesCollectionState = .reloaded
         sender.endRefreshing()
+    }
+    
+    // MARK: - Did set collection view state
+    func didSetCollectionState(to state: MoviesCollectionState) {
+        switch state {
+        case .loading:
+            self.dataRepository.loadMovies(of: self.nextPage) { (bool) in
+                self.moviesCollectionState = bool ? .loaded : .error(.loading)
+            }
+        case .loaded:
+            self.nextPage += 1
+            self.movies = self.dataRepository.localStorage.movies
+        case .error(let errorType):
+            switch errorType {
+            case .loading:
+                self.screen.presentErrorView(imageNamed: "Error",
+                                             title: "An error has occurred. Please try again")
+            case .filter:
+                self.screen.presentErrorView(imageNamed: "EmptySearch",
+                                             title: "Your search returned no results")
+            }
+        case .filtered:
+            self.movies = self.dataRepository.localStorage.movies.filter({ (movie) -> Bool in
+                return movie.title.lowercased().contains(self.searchFilteredBy.lowercased())
+            })
+            
+            if self.movies.count == 0 {
+                self.moviesCollectionState = .error(.filter)
+            } else {
+                self.screen.hideErrorView()
+            }
+        case .reloaded:
+            self.screen.hideErrorView()
+            self.movies = self.dataRepository.localStorage.movies
+        }
+        
+        if state == .loaded || state == .reloaded || state == .filtered {
+            DispatchQueue.main.async {
+                self.screen.moviesCollectionView.reloadData()
+            }
+        }
+    }
+    
+    // MARK: - Collection state
+    enum MoviesCollectionState: Equatable {
+        case loading, loaded, filtered, reloaded
+        case error(ErrorType)
+    }
+    
+    enum ErrorType {
+        case filter, loading
     }
 }
 
@@ -85,19 +104,19 @@ class MoviesController: UIViewController {
 extension MoviesController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView,
                         numberOfItemsInSection section: Int) -> Int {
-        switch self.collectionState {
+        switch self.moviesCollectionState {
         case .loading:
-            return 1
-        case .loadError:
+            return self.movies.count == 0 ? 1 : self.movies.count
+        case .error:
             return 0
-        case .loadSuccess, .normal, .filtered:
+        case .loaded, .filtered, .reloaded:
             return self.movies.count
         }
     }
     
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if self.collectionState == .loading {
+        if self.moviesCollectionState == .loading {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MovieCell", for: indexPath)
             return cell
         }
@@ -121,9 +140,9 @@ extension MoviesController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView,
                         willDisplay cell: UICollectionViewCell,
                         forItemAt indexPath: IndexPath) {
-        if indexPath.row == self.movies.count - 1 && self.collectionState != .filtered {
-            self.dataRespository.loadMovies(of: self.nextPage) { (bool) in
-                self.collectionState = bool ? .loadSuccess : .loadError
+        if indexPath.row == self.movies.count - 1 && self.moviesCollectionState != .filtered {
+            self.dataRepository.loadMovies(of: self.nextPage) { (bool) in
+                self.moviesCollectionState = bool ? .loaded : .error(.loading)
             }
         }
     }
@@ -135,9 +154,9 @@ extension MoviesController: UISearchResultsUpdating {
         self.searchFilteredBy = searchController.searchBar.text ?? ""
         // Set state according to search existence
         if self.searchFilteredBy.isEmpty {
-            self.collectionState = .normal
+            self.moviesCollectionState = .loading
         } else {
-            self.collectionState = .filtered
+            self.moviesCollectionState = .filtered
         }
     }
 }

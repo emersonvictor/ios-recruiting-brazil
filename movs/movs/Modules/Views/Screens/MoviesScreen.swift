@@ -70,24 +70,17 @@ class MoviesScreen: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Exception view
-    func showErrorView() {
+    // MARK: - Exception view    
+    func presentErrorView(imageNamed: String, title: String) {
         DispatchQueue.main.async {
-            self.moviesCollectionView.backgroundView = ExceptionView(imageNamed: "Error",
-                                                                     title: "An error has occurred. Please try again")
+            self.moviesCollectionView.backgroundView = ExceptionView(imageNamed: imageNamed,
+                                                                     title: title)
         }
     }
     
-    func presentEmptySearch(_ shouldPresent: Bool) {
-        if shouldPresent {
-            DispatchQueue.main.async {
-                self.moviesCollectionView.backgroundView = ExceptionView(imageNamed: "EmptySearch",
-                                                                         title: "Your search returned no results")
-            }
-        } else {
-            DispatchQueue.main.async {
-                self.moviesCollectionView.backgroundView = nil
-            }
+    func hideErrorView() {
+        DispatchQueue.main.async {
+            self.moviesCollectionView.backgroundView = nil
         }
     }
 }

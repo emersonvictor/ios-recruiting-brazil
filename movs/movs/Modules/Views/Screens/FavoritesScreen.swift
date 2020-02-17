@@ -66,23 +66,16 @@ class FavoritesScreen: UIView {
     }
     
     // MARK: - Exception view
-    func showErrorView() {
+    func presentErrorView(imageNamed: String, title: String) {
         DispatchQueue.main.async {
-            self.favoritesTableView.backgroundView = ExceptionView(imageNamed: "Error",
-                                                                   title: "An error has occurred. Please try again")
+            self.favoritesTableView.backgroundView = ExceptionView(imageNamed: imageNamed,
+                                                                   title: title)
         }
     }
     
-    func presentEmptySearch(_ shouldPresent: Bool) {
-        if shouldPresent {
-            DispatchQueue.main.async {
-                self.favoritesTableView.backgroundView = ExceptionView(imageNamed: "EmptySearch",
-                                                                       title: "Your search returned no results")
-            }
-        } else {
-            DispatchQueue.main.async {
-                self.favoritesTableView.backgroundView = nil
-            }
+    func hideErrorView() {
+        DispatchQueue.main.async {
+            self.favoritesTableView.backgroundView = nil
         }
     }
     
