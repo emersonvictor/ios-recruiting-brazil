@@ -10,22 +10,20 @@ import UIKit
 
 class MoviesCoordinator: Coordinator {
     
-    typealias Presenter = UITabBarController
-    typealias Controller = UINavigationController
+    var rootController: UINavigationController
+    var childCoordinators: [Coordinator]
     
-    let presenter: Presenter
-    let controller: Controller
-    
-    init(parent: AppCoordinator) {
-        let moviesController = MoviesController()
-        moviesController.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 0)
-        let controller = UINavigationController(rootViewController: moviesController)
-        controller.navigationBar.prefersLargeTitles = true
-        controller.navigationBar.tintColor = .label
-        
-        self.presenter = parent.controller
-        self.controller = controller
+    init() {
+        let navigationController = UINavigationController()
+        navigationController.navigationBar.prefersLargeTitles = true
+        navigationController.navigationBar.tintColor = .label
+        self.rootController = navigationController
+        self.childCoordinators = []
     }
     
-    func start() { }
+    func start() {
+        let moviesController = MoviesController()
+        moviesController.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 0)
+        self.rootController.pushViewController(moviesController, animated: true)
+    }
 }

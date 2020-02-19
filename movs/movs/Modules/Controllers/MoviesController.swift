@@ -16,6 +16,7 @@ class MoviesController: UIViewController {
     var movies: [Movie] = []
     var nextPage: Int = 1
     var searchFilteredBy = ""
+//    weak var coordinator: MovieDetailDelegate?
     var moviesCollectionState: MoviesCollectionState = .loading {
         didSet {
             self.didSetCollectionState(to: self.moviesCollectionState)
@@ -37,6 +38,7 @@ class MoviesController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.moviesCollectionState = .reloaded
     }
 }
 
@@ -131,10 +133,7 @@ extension MoviesController: UICollectionViewDataSource {
 // MARK: - Collection view delegate
 extension MoviesController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let movie = self.movies[indexPath.row]
-        let movieDetailControler = MovieDetailController(movie: movie)
-        self.navigationController?.pushViewController(movieDetailControler,
-                                                      animated: true)
+//        self.coordinator?.show(self.movies[indexPath.row])
     }
     
     func collectionView(_ collectionView: UICollectionView,

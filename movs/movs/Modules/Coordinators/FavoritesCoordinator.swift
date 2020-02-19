@@ -10,23 +10,20 @@ import UIKit
 
 class FavoritesCoordinator: Coordinator {
     
-    typealias Presenter = TabBarController
-    typealias Controller = UINavigationController
+    var rootController: UINavigationController
+    var childCoordinators: [Coordinator]
     
-    let controller: Controller
-    let presenter: Presenter
-    
-    init(parent: AppCoordinator) {
-        let favoritesController = FavoritesController()
-        favoritesController.tabBarItem = UITabBarItem(tabBarSystemItem: .favorites, tag: 1)
-        let controller = UINavigationController(rootViewController: favoritesController)
-        controller.navigationBar.prefersLargeTitles = true
-        controller.navigationBar.tintColor = .label
-        
-        self.presenter = parent.controller
-        self.controller = controller
+    init() {
+        let navigationController = UINavigationController()
+        navigationController.navigationBar.prefersLargeTitles = true
+        navigationController.navigationBar.tintColor = .label
+        self.rootController = navigationController
+        self.childCoordinators = []
     }
     
-    func start() { }
-    
+    func start() {
+        let moviesController = FavoritesController()
+        moviesController.tabBarItem = UITabBarItem(tabBarSystemItem: .favorites, tag: 1)
+        self.rootController.pushViewController(moviesController, animated: true)
+    }
 }

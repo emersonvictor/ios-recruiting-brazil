@@ -8,35 +8,31 @@
 
 import UIKit
 
-class AppCoordinator: Coordinator {
-    
-    typealias Presenter = UIWindow
-    typealias Controller = TabBarController
-    
-    let presenter: UIWindow
-    let controller: TabBarController
-    
-    // Child coordinators
-    lazy var moviesCoordinator: MoviesCoordinator = {
-        return MoviesCoordinator(parent: self)
-    }()
-    
-    lazy var favoritesCoordinator: FavoritesCoordinator = {
-        return FavoritesCoordinator(parent: self)
-    }()
+class AppCoordinator: MainCoordinator {
 
-    // MARK: - Initializer
+    var presenter: UIWindow
+    let rootController: MainTabBarController
+    var childCoordinators: [Coordinator]
+    
+    // Initializer
     init(window: UIWindow) {
         self.presenter = window
-        self.controller = TabBarController()
+        self.rootController = MainTabBarController()
+        self.childCoordinators = []
     }
     
+    // Start coordinator
     func start() {
-        self.controller.viewControllers = [
-            self.moviesCoordinator.controller,
-            self.favoritesCoordinator.controller
+        let moviesCoordinator = MoviesCoordinator()
+        moviesCoordinator.start()
+        let favoritesCoordinator = FavoritesCoordinator()
+        favoritesCoordinator.start()
+        
+        self.rootController.viewControllers = [
+            moviesCoordinator.rootController,
+            favoritesCoordinator.rootController
         ]
-        self.presenter.rootViewController = self.controller
+        self.presenter.rootViewController = self.rootController
         self.presenter.makeKeyAndVisible()
     }
 }

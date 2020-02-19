@@ -24,6 +24,7 @@ class FavoritesController: UIViewController {
     let dataRepository = DataRepository()
     var searchFilteredBy = ""
     var filters: [FilterType: String] = [:]
+//    weak var coordinator: MovieDetailDelegate?
     var favorites: [Movie] = [] {
         didSet {
             self.favorites.sort { (lmovie, rmovie) -> Bool in
@@ -205,10 +206,7 @@ extension FavoritesController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let movie = self.favorites[indexPath.row]
-        let movieDetailControler = MovieDetailController(movie: movie)
-        self.navigationController?.pushViewController(movieDetailControler,
-                                                      animated: true)
+//        self.coordinator?.show(self.favorites[indexPath.row])
     }
 }
 
