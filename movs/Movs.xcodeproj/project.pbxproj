@@ -24,6 +24,8 @@
 		D965A5F023A8F8F900B6B618 /* MovieCellSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = D965A5EF23A8F8F900B6B618 /* MovieCellSpec.swift */; };
 		D965A5F223A8F92E00B6B618 /* FavoriteCellSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = D965A5F123A8F92E00B6B618 /* FavoriteCellSpec.swift */; };
 		D965A5FC23A8F9DC00B6B618 /* MovieDetailSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = D965A5FB23A8F9DC00B6B618 /* MovieDetailSpec.swift */; };
+		D98610DD23FDDE8C005D331F /* MovieDetailDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98610DC23FDDE8C005D331F /* MovieDetailDelegate.swift */; };
+		D98610DF23FDDE9C005D331F /* FiltersDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98610DE23FDDE9C005D331F /* FiltersDelegate.swift */; };
 		D9A96FFC23F1BFEA004BF9E8 /* DataRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9A96FFB23F1BFEA004BF9E8 /* DataRepository.swift */; };
 		D9B27E8F239F0CC60071D9E5 /* FilterType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9B27E8E239F0CC60071D9E5 /* FilterType.swift */; };
 		D9BA93CC23974649009671EB /* CodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9BA93CB23974649009671EB /* CodeView.swift */; };
@@ -111,6 +113,8 @@
 		D965A5EF23A8F8F900B6B618 /* MovieCellSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCellSpec.swift; sourceTree = "<group>"; };
 		D965A5F123A8F92E00B6B618 /* FavoriteCellSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCellSpec.swift; sourceTree = "<group>"; };
 		D965A5FB23A8F9DC00B6B618 /* MovieDetailSpec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailSpec.swift; sourceTree = "<group>"; };
+		D98610DC23FDDE8C005D331F /* MovieDetailDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailDelegate.swift; sourceTree = "<group>"; };
+		D98610DE23FDDE9C005D331F /* FiltersDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersDelegate.swift; sourceTree = "<group>"; };
 		D9A96FFB23F1BFEA004BF9E8 /* DataRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataRepository.swift; sourceTree = "<group>"; };
 		D9B27E8E239F0CC60071D9E5 /* FilterType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterType.swift; sourceTree = "<group>"; };
 		D9BA93CB23974649009671EB /* CodeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeView.swift; sourceTree = "<group>"; };
@@ -123,7 +127,7 @@
 		D9FBF7232395355200C09F2C /* Movs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Movs.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9FBF7262395355200C09F2C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D9FBF7342395355600C09F2C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D9FBF7392395355600C09F2C /* movsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = movsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9FBF7392395355600C09F2C /* MovsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9FBF73F2395355600C09F2C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D9FBF75F239539CA00C09F2C /* MoviesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesController.swift; sourceTree = "<group>"; };
 		D9FBF76123953A7000C09F2C /* MovieCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieCell.swift; sourceTree = "<group>"; };
@@ -139,7 +143,7 @@
 		D9FBF78C23953FA400C09F2C /* MovieDetailScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailScreen.swift; sourceTree = "<group>"; };
 		D9FBF78E23953FB100C09F2C /* MoviesScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesScreen.swift; sourceTree = "<group>"; };
 		D9FBF7992395417900C09F2C /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
-		D9FBF79F2395422400C09F2C /* movsSnapshotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = movsSnapshotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D9FBF79F2395422400C09F2C /* MovsSnapshotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovsSnapshotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9FBF7A32395422400C09F2C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D9FC2F7023B01EC300E1D129 /* DataTransferObjectsMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransferObjectsMock.swift; sourceTree = "<group>"; };
 		D9FC2F7223B0295B00E1D129 /* DataServiceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataServiceTest.swift; sourceTree = "<group>"; };
@@ -220,6 +224,7 @@
 			children = (
 				D9BA93CB23974649009671EB /* CodeView.swift */,
 				D9FA3BF323FDCE5000348F38 /* Coordinator */,
+				D98610DB23FDDE70005D331F /* CoordinatorDelegates */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -240,11 +245,42 @@
 			path = Structs;
 			sourceTree = "<group>";
 		};
+		D98610DB23FDDE70005D331F /* CoordinatorDelegates */ = {
+			isa = PBXGroup;
+			children = (
+				D98610DE23FDDE9C005D331F /* FiltersDelegate.swift */,
+				D98610DC23FDDE8C005D331F /* MovieDetailDelegate.swift */,
+			);
+			path = CoordinatorDelegates;
+			sourceTree = "<group>";
+		};
+		D98610E123FDDF32005D331F /* TestDoubles */ = {
+			isa = PBXGroup;
+			children = (
+				D9BF319A23AD629A0069232A /* Services */,
+				D9FE791C239700B80000C0C7 /* Model */,
+			);
+			path = TestDoubles;
+			sourceTree = "<group>";
+		};
+		D98610E223FDDF82005D331F /* UnitTests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = UnitTests;
+			sourceTree = "<group>";
+		};
+		D98610E323FDE014005D331F /* IntegrationTests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = IntegrationTests;
+			sourceTree = "<group>";
+		};
 		D99606E023F421940046CAFB /* Modules */ = {
 			isa = PBXGroup;
 			children = (
 				D9FBF75A2395366A00C09F2C /* Controllers */,
-				D99606E123F421A40046CAFB /* Coordinators */,
 				D9FBF7572395356700C09F2C /* Models */,
 				D9FBF7582395356C00C09F2C /* Views */,
 			);
@@ -300,9 +336,8 @@
 		D9FBF71A2395355200C09F2C = {
 			isa = PBXGroup;
 			children = (
-				D9FBF7252395355200C09F2C /* movs */,
-				D9FBF7A02395422400C09F2C /* movsSnapshotTests */,
-				D9FBF73C2395355600C09F2C /* movsTests */,
+				D9FBF7252395355200C09F2C /* Movs */,
+				D9FBF73C2395355600C09F2C /* MovsTests */,
 				D9FBF7242395355200C09F2C /* Products */,
 				16AC4E47AE0DB01EFC57DA06 /* Pods */,
 				BB7FF0C888B4241C936788F5 /* Frameworks */,
@@ -313,30 +348,33 @@
 			isa = PBXGroup;
 			children = (
 				D9FBF7232395355200C09F2C /* Movs.app */,
-				D9FBF7392395355600C09F2C /* movsTests.xctest */,
-				D9FBF79F2395422400C09F2C /* movsSnapshotTests.xctest */,
+				D9FBF7392395355600C09F2C /* MovsTests.xctest */,
+				D9FBF79F2395422400C09F2C /* MovsSnapshotTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		D9FBF7252395355200C09F2C /* movs */ = {
+		D9FBF7252395355200C09F2C /* Movs */ = {
 			isa = PBXGroup;
 			children = (
 				D9FBF7562395356100C09F2C /* Application */,
-				D9FBF79023953FE400C09F2C /* Helpers */,
+				D99606E123F421A40046CAFB /* Coordinators */,
 				D99606E023F421940046CAFB /* Modules */,
+				D9FBF79023953FE400C09F2C /* SupportFiles */,
 			);
-			path = movs;
+			path = Movs;
 			sourceTree = "<group>";
 		};
-		D9FBF73C2395355600C09F2C /* movsTests */ = {
+		D9FBF73C2395355600C09F2C /* MovsTests */ = {
 			isa = PBXGroup;
 			children = (
-				D9BF319A23AD629A0069232A /* Services */,
-				D9FE791C239700B80000C0C7 /* Model */,
 				D9FBF73F2395355600C09F2C /* Info.plist */,
+				D98610E323FDE014005D331F /* IntegrationTests */,
+				D9FBF7A02395422400C09F2C /* SnapshotTests */,
+				D98610E123FDDF32005D331F /* TestDoubles */,
+				D98610E223FDDF82005D331F /* UnitTests */,
 			);
-			path = movsTests;
+			path = MovsTests;
 			sourceTree = "<group>";
 		};
 		D9FBF7562395356100C09F2C /* Application */ = {
@@ -352,8 +390,8 @@
 		D9FBF7572395356700C09F2C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				D9FBF77323953C4700C09F2C /* DataHandles */,
 				D9FBF7972395413900C09F2C /* DataTransferObjects */,
-				D9FBF77323953C4700C09F2C /* Managers */,
 				D9FBF7982395414400C09F2C /* Objects */,
 			);
 			path = Models;
@@ -391,14 +429,14 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
-		D9FBF77323953C4700C09F2C /* Managers */ = {
+		D9FBF77323953C4700C09F2C /* DataHandles */ = {
 			isa = PBXGroup;
 			children = (
 				D9A96FFB23F1BFEA004BF9E8 /* DataRepository.swift */,
 				D93485F623F1DC3200CF558E /* DataStorage.swift */,
 				D93485F423F1DBE900CF558E /* MovieAPIManager.swift */,
 			);
-			path = Managers;
+			path = DataHandles;
 			sourceTree = "<group>";
 		};
 		D9FBF78423953F0F00C09F2C /* Components */ = {
@@ -423,14 +461,14 @@
 			path = Screens;
 			sourceTree = "<group>";
 		};
-		D9FBF79023953FE400C09F2C /* Helpers */ = {
+		D9FBF79023953FE400C09F2C /* SupportFiles */ = {
 			isa = PBXGroup;
 			children = (
 				D93471F423FC542A00D07BC2 /* Enums */,
 				D93471F323FC542000D07BC2 /* Protocols */,
 				D93471F523FC543200D07BC2 /* Structs */,
 			);
-			path = Helpers;
+			path = SupportFiles;
 			sourceTree = "<group>";
 		};
 		D9FBF7972395413900C09F2C /* DataTransferObjects */ = {
@@ -452,7 +490,7 @@
 			path = Objects;
 			sourceTree = "<group>";
 		};
-		D9FBF7A02395422400C09F2C /* movsSnapshotTests */ = {
+		D9FBF7A02395422400C09F2C /* SnapshotTests */ = {
 			isa = PBXGroup;
 			children = (
 				D965A5EE23A8F8F800B6B618 /* movsSnapshotTests-Bridging-Header.h */,
@@ -460,7 +498,7 @@
 				D9BA93C923971021009671EB /* Components */,
 				D9BA93C823970FDF009671EB /* Views */,
 			);
-			path = movsSnapshotTests;
+			path = SnapshotTests;
 			sourceTree = "<group>";
 		};
 		D9FE791C239700B80000C0C7 /* Model */ = {
@@ -476,9 +514,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		D9FBF7222395355200C09F2C /* movs */ = {
+		D9FBF7222395355200C09F2C /* Movs */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D9FBF74D2395355600C09F2C /* Build configuration list for PBXNativeTarget "movs" */;
+			buildConfigurationList = D9FBF74D2395355600C09F2C /* Build configuration list for PBXNativeTarget "Movs" */;
 			buildPhases = (
 				89D19575355ED2E10C675C79 /* [CP] Check Pods Manifest.lock */,
 				D9FBF71F2395355200C09F2C /* Sources */,
@@ -491,14 +529,14 @@
 			);
 			dependencies = (
 			);
-			name = movs;
+			name = Movs;
 			productName = movs;
 			productReference = D9FBF7232395355200C09F2C /* Movs.app */;
 			productType = "com.apple.product-type.application";
 		};
-		D9FBF7382395355600C09F2C /* movsTests */ = {
+		D9FBF7382395355600C09F2C /* MovsTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D9FBF7502395355600C09F2C /* Build configuration list for PBXNativeTarget "movsTests" */;
+			buildConfigurationList = D9FBF7502395355600C09F2C /* Build configuration list for PBXNativeTarget "MovsTests" */;
 			buildPhases = (
 				38B25FED7FCBED3B1DBE2FA3 /* [CP] Check Pods Manifest.lock */,
 				D9FBF7352395355600C09F2C /* Sources */,
@@ -510,14 +548,14 @@
 			dependencies = (
 				D9FBF73B2395355600C09F2C /* PBXTargetDependency */,
 			);
-			name = movsTests;
+			name = MovsTests;
 			productName = movsTests;
-			productReference = D9FBF7392395355600C09F2C /* movsTests.xctest */;
+			productReference = D9FBF7392395355600C09F2C /* MovsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		D9FBF79E2395422400C09F2C /* movsSnapshotTests */ = {
+		D9FBF79E2395422400C09F2C /* MovsSnapshotTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = D9FBF7A62395422400C09F2C /* Build configuration list for PBXNativeTarget "movsSnapshotTests" */;
+			buildConfigurationList = D9FBF7A62395422400C09F2C /* Build configuration list for PBXNativeTarget "MovsSnapshotTests" */;
 			buildPhases = (
 				65959FFBD133F2729140D9CD /* [CP] Check Pods Manifest.lock */,
 				D9FBF79B2395422400C09F2C /* Sources */,
@@ -530,9 +568,9 @@
 			dependencies = (
 				D9FBF7A52395422400C09F2C /* PBXTargetDependency */,
 			);
-			name = movsSnapshotTests;
+			name = MovsSnapshotTests;
 			productName = movsSnapshotTests;
-			productReference = D9FBF79F2395422400C09F2C /* movsSnapshotTests.xctest */;
+			productReference = D9FBF79F2395422400C09F2C /* MovsSnapshotTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -560,7 +598,7 @@
 					};
 				};
 			};
-			buildConfigurationList = D9FBF71E2395355200C09F2C /* Build configuration list for PBXProject "movs" */;
+			buildConfigurationList = D9FBF71E2395355200C09F2C /* Build configuration list for PBXProject "Movs" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -573,9 +611,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				D9FBF7222395355200C09F2C /* movs */,
-				D9FBF7382395355600C09F2C /* movsTests */,
-				D9FBF79E2395422400C09F2C /* movsSnapshotTests */,
+				D9FBF7222395355200C09F2C /* Movs */,
+				D9FBF7382395355600C09F2C /* MovsTests */,
+				D9FBF79E2395422400C09F2C /* MovsSnapshotTests */,
 			);
 		};
 /* End PBXProject section */
@@ -755,6 +793,7 @@
 				D93485F723F1DC3200CF558E /* DataStorage.swift in Sources */,
 				D9FA3BF223FDCD9A00348F38 /* BaseCoordinator.swift in Sources */,
 				D917E6B32395921300BDBA43 /* MovieDTO.swift in Sources */,
+				D98610DF23FDDE9C005D331F /* FiltersDelegate.swift in Sources */,
 				D9FBF760239539CA00C09F2C /* MoviesController.swift in Sources */,
 				D9F505AF23980E8A00EF7833 /* MainTabBarController.swift in Sources */,
 				D93CB79623F45D4300F869EF /* MoviesCoordinator.swift in Sources */,
@@ -763,6 +802,7 @@
 				D9FBF77223953C0D00C09F2C /* FilterController.swift in Sources */,
 				D94DF1C423A1B61D001B090B /* MovieDetailDTO.swift in Sources */,
 				D9FBF78B23953F8800C09F2C /* FiltersScreen.swift in Sources */,
+				D98610DD23FDDE8C005D331F /* MovieDetailDelegate.swift in Sources */,
 				D9FBF77023953BFC00C09F2C /* FiltersController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -794,12 +834,12 @@
 /* Begin PBXTargetDependency section */
 		D9FBF73B2395355600C09F2C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = D9FBF7222395355200C09F2C /* movs */;
+			target = D9FBF7222395355200C09F2C /* Movs */;
 			targetProxy = D9FBF73A2395355600C09F2C /* PBXContainerItemProxy */;
 		};
 		D9FBF7A52395422400C09F2C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = D9FBF7222395355200C09F2C /* movs */;
+			target = D9FBF7222395355200C09F2C /* Movs */;
 			targetProxy = D9FBF7A42395422400C09F2C /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1056,7 +1096,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D9FBF71E2395355200C09F2C /* Build configuration list for PBXProject "movs" */ = {
+		D9FBF71E2395355200C09F2C /* Build configuration list for PBXProject "Movs" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D9FBF74B2395355600C09F2C /* Debug */,
@@ -1065,7 +1105,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D9FBF74D2395355600C09F2C /* Build configuration list for PBXNativeTarget "movs" */ = {
+		D9FBF74D2395355600C09F2C /* Build configuration list for PBXNativeTarget "Movs" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D9FBF74E2395355600C09F2C /* Debug */,
@@ -1074,7 +1114,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D9FBF7502395355600C09F2C /* Build configuration list for PBXNativeTarget "movsTests" */ = {
+		D9FBF7502395355600C09F2C /* Build configuration list for PBXNativeTarget "MovsTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D9FBF7512395355600C09F2C /* Debug */,
@@ -1083,7 +1123,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		D9FBF7A62395422400C09F2C /* Build configuration list for PBXNativeTarget "movsSnapshotTests" */ = {
+		D9FBF7A62395422400C09F2C /* Build configuration list for PBXNativeTarget "MovsSnapshotTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D9FBF7A72395422400C09F2C /* Debug */,
