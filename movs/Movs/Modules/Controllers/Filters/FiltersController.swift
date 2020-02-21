@@ -9,20 +9,21 @@
 import UIKit
 
 class FiltersController: UIViewController {
+    
+    // MARK: - Coordinator
+    typealias FiltersCoordinatorOutput = FiltersDelegate & Coordinator
+    weak var coordinator: FiltersCoordinatorOutput?
+    
     // MARK: - Attributes
     lazy var screen = FiltersScreen(controller: self)
-    var filters: [FilterType: String?] = [:]
+    var filters: [FilterType: String?]
+    var filtersArray: [FilterType]
     
     // MARK: - Initializers
-    required init(filters: [FilterType: String]) {
+    required init(filters: [FilterType: String?]) {
+        self.filtersArray = FilterType.allCases.sorted()
+        self.filters = filters
         super.init(nibName: nil, bundle: nil)
-        FilterType.allCases.forEach { (filterType) in
-            if let value = filters[filterType] {
-                self.filters[filterType] = value
-            } else {
-                self.filters[filterType] = ""
-            }
-        }
     }
     
     required init?(coder: NSCoder) {
@@ -34,6 +35,9 @@ class FiltersController: UIViewController {
         super.loadView()
         self.title = "Filters"
         self.view = self.screen
+        self.screen.applyButton.addTarget(self,
+                                          action: #selector(applyFilters),
+                                          for: .touchUpInside)
     }
     
     override func viewDidLoad() {
@@ -42,34 +46,33 @@ class FiltersController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        if let filters = self.coordinator?.filters {
+            self.filters = filters
+        }
         self.screen.filtersTableView.reloadData()
         super.viewWillAppear(animated)
     }
     
     // MARK: - Apply filters action
     @objc func applyFilters() {
-        self.navigationController?.popViewController(animated: true)
-        if let controller = self.navigationController?.visibleViewController as? FavoritesController {
-            self.filters.forEach { (key, value) in
-                controller.filters[key] = value == "" ? nil : value
-            }
-        }
+        self.coordinator?.applyFilters()
     }
 }
 
 // MARK: - Table view data source
 extension FiltersController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.filters.count
+        return self.filtersArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
+        let filterType = self.filtersArray[indexPath.row]
+        
         cell.accessoryType = .disclosureIndicator
-        if let filterType = FilterType(rawValue: indexPath.row) {
-            cell.textLabel?.text = filterType.stringValue
-            cell.detailTextLabel?.text = self.filters[filterType] ?? nil
-        }
+        cell.textLabel?.text = filterType.rawValue
+        cell.detailTextLabel?.text = self.filters[filterType] ?? nil
+        
         return cell
     }
 }
@@ -77,9 +80,7 @@ extension FiltersController: UITableViewDataSource {
 // MARK: - Table view delegate
 extension FiltersController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let filterType = FilterType(rawValue: indexPath.row)!
-        let filterController = FilterController(filterType: filterType, selectedValue: self.filters[filterType] ?? nil)
-        self.navigationController?.pushViewController(filterController,
-                                                      animated: true)
+        let filterType = self.filtersArray[indexPath.row]
+        self.coordinator?.showFilter(of: filterType)
     }
 }

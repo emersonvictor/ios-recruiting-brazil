@@ -9,19 +9,23 @@
 import UIKit
 
 class FilterController: UIViewController {
+    
+    // MARK: - Coordinator
+    typealias FilterCoordinatorOutput = FilterDelegate & Coordinator
+    weak var coordinator: FilterCoordinatorOutput?
+    
     // MARK: - Attributes
     lazy var screen = FilterScreen(controller: self)
-    let dataRespository = DataRepository()
     let filterType: FilterType
+    let values: [String]
     var selectedValue: String?
-    var filterValues: [String] = []
     
     // MARK: - Initializers
     required init(filterType: FilterType, selectedValue: String?) {
         self.filterType = filterType
+        self.values = filterType.values
         self.selectedValue = selectedValue
         super.init(nibName: nil, bundle: nil)
-        self.filterValues = self.createFilterValues(for: filterType)
     }
     
     required init?(coder: NSCoder) {
@@ -32,7 +36,7 @@ class FilterController: UIViewController {
     override func loadView() {
         super.loadView()
         self.view = self.screen
-        self.title = self.filterType.stringValue
+        self.title = self.filterType.rawValue
     }
     
     override func viewDidLoad() {
@@ -40,42 +44,21 @@ class FilterController: UIViewController {
         self.navigationItem.largeTitleDisplayMode = .always
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        if let controller = self.navigationController?.visibleViewController as? FiltersController {
-            controller.filters[self.filterType] = self.selectedValue ?? ""
-        }
-        super.viewWillDisappear(animated)
-    }
-    
-    // MARK: - Create filter values
-    func createFilterValues(for type: FilterType) -> [String] {
-        switch type {
-        case .date:
-            let movieMinYear = self.dataRespository.localStorage.favorites.min { (lmovie, rmovie) -> Bool in
-                return Int(lmovie.releaseDate)! < Int(rmovie.releaseDate)!
-            }
-            
-            if let minYear = Int(movieMinYear?.releaseDate ?? "") {
-                let currentYear = Int(Calendar.current.component(.year, from: Date()))
-                return Array(minYear...currentYear).map({ year in String(year)})
-            } else {
-                return []
-            }
-        case .genre:
-            return Array(self.dataRespository.localStorage.genres.values).sorted()
-        }
+    override func willMove(toParent parent: UIViewController?) {
+        self.coordinator?.didSelect(self.selectedValue, for: self.filterType)
+        super.willMove(toParent: parent)
     }
 }
 
 // MARK: - Table view data source
 extension FilterController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.filterValues.count
+        return self.values.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
-        let value = self.filterValues[indexPath.row]
+        let value = self.values[indexPath.row]
         
         cell.textLabel?.text = value
         cell.selectionStyle = .none
@@ -92,11 +75,11 @@ extension FilterController: UITableViewDataSource {
 extension FilterController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedCell = tableView.cellForRow(at: indexPath)!
+        
         // Check if exists a selected value
         if let selectedValue = self.selectedValue,
-            let index = self.filterValues.firstIndex(of: selectedValue) {
+            let index = self.values.firstIndex(of: selectedValue) {
             
-            // Get cell with last selected value
             let lastSelectedCell = tableView.cellForRow(at: IndexPath(item: index, section: 0))!
             lastSelectedCell.accessoryType = .none
             
@@ -107,7 +90,7 @@ extension FilterController: UITableViewDelegate {
             }
         }
         
-        self.selectedValue = self.filterValues[indexPath.row]
+        self.selectedValue = self.values[indexPath.row]
         selectedCell.accessoryType = .checkmark
     }
 }

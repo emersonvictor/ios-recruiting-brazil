@@ -9,6 +9,11 @@
 import UIKit
 
 class FavoritesController: UIViewController {
+    
+    // MARK: - Coordinator
+    typealias FavoritesCoordinatorOutput = MovieDetailDelegate & MovieFavoriteDelegate & FavoritesDelegate
+    weak var coordinator: FavoritesCoordinatorOutput?
+    
     // MARK: - Navigation item
     lazy var filterButton: UIBarButtonItem = {
         let item = UIBarButtonItem(image: UIImage(systemName: "line.horizontal.3.decrease"),
@@ -24,7 +29,6 @@ class FavoritesController: UIViewController {
     let dataRepository = DataRepository()
     var searchFilteredBy = ""
     var filters: [FilterType: String] = [:]
-//    weak var coordinator: MovieDetailDelegate?
     var favorites: [Movie] = [] {
         didSet {
             self.favorites.sort { (lmovie, rmovie) -> Bool in
@@ -55,8 +59,8 @@ class FavoritesController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         self.favoritesCollectionState = .loading
+        super.viewWillAppear(animated)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -71,11 +75,11 @@ class FavoritesController: UIViewController {
     
     // MARK: - Filter actions
     @objc func goToFilters() {
-        let controller = FiltersController(filters: self.filters)
-        self.navigationController?.pushViewController(controller, animated: true)
+        self.coordinator?.showFilters()
     }
     
     @objc func removeFilters() {
+        self.coordinator?.removeFilters()
         self.filters = [:]
         self.searchFilteredBy = ""
         self.screen.hideButton()
@@ -199,14 +203,13 @@ extension FavoritesController: UITableViewDelegate {
             tableView.beginUpdates()
             let movie = self.favorites.remove(at: indexPath.row)
             movie.isFavorite = false
-            self.dataRepository.remove(movie.id)
             tableView.deleteRows(at: [indexPath], with: .left)
             tableView.endUpdates()
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        self.coordinator?.show(self.favorites[indexPath.row])
+        self.coordinator?.show(self.favorites[indexPath.row])
     }
 }
 

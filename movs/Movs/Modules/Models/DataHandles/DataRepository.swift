@@ -120,15 +120,15 @@ struct DataRepository {
         })
     }
     
-    // MARK: - Favorite
-    func add(_ id: Int) {
-        self.localStorage.favoritesIDs.insert(id)
-    }
-    
-    func remove(_ id: Int) {
-        self.localStorage.favoritesIDs.remove(id)
-        self.localStorage.favorites.removeAll { (movie) -> Bool in
-            return movie.id == id
+    // MARK: - Favorite    
+    func toggle(_ id: Int) {
+        if self.localStorage.favoritesIDs.contains(id) {
+            self.localStorage.favoritesIDs.remove(id)
+            self.localStorage.favorites.removeAll { (movie) -> Bool in
+                return movie.id == id
+            }
+        } else {
+            self.localStorage.favoritesIDs.insert(id)
         }
     }
     

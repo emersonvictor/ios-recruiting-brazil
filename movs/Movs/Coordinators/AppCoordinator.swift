@@ -10,23 +10,24 @@ import UIKit
 
 class AppCoordinator: MainCoordinator {
 
-    var presenter: UIWindow
+    let presenter: UIWindow
     let rootController: MainTabBarController
     var childCoordinators: [Coordinator]
     
-    // Initializer
     init(window: UIWindow) {
         self.presenter = window
         self.rootController = MainTabBarController()
         self.childCoordinators = []
     }
     
-    // Start coordinator
     func start() {
         let moviesCoordinator = MoviesCoordinator()
         moviesCoordinator.start()
+        self.add(moviesCoordinator)
+        
         let favoritesCoordinator = FavoritesCoordinator()
         favoritesCoordinator.start()
+        self.add(favoritesCoordinator)
         
         self.rootController.viewControllers = [
             moviesCoordinator.rootController,

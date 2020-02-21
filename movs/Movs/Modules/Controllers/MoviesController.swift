@@ -10,13 +10,15 @@ import UIKit
 
 class MoviesController: UIViewController {
     
+    typealias MoviesCoordinatorOutput = MovieDetailDelegate & MovieFavoriteDelegate
+    
     // MARK: - Attributes
     lazy var screen = MoviesScreen(controller: self)
     let dataRepository = DataRepository()
     var movies: [Movie] = []
     var nextPage: Int = 1
     var searchFilteredBy = ""
-//    weak var coordinator: MovieDetailDelegate?
+    weak var coordinator: MoviesCoordinatorOutput?
     var moviesCollectionState: MoviesCollectionState = .loading {
         didSet {
             self.didSetCollectionState(to: self.moviesCollectionState)
@@ -118,22 +120,32 @@ extension MoviesController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MovieCell",
+                                                      for: indexPath) as! MovieCell
+        
         if self.moviesCollectionState == .loading {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MovieCell", for: indexPath)
             return cell
         }
-        
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MovieCell", for: indexPath) as? MovieCell
-        let movie = self.movies[indexPath.row]
-        cell?.setup(with: movie)
-        return cell!
+
+        cell.setup(with: self.movies[indexPath.row])
+        cell.favoriteButton.tag = indexPath.row
+        cell.favoriteButton.addTarget(self,
+                                       action: #selector(didFavoriteMovie),
+                                       for: .touchUpInside)
+        return cell
+    }
+    
+    // MARK: - Favorite action
+    @objc func didFavoriteMovie(_ sender: FavoriteButton) {
+        self.coordinator?.toggleFavorite(self.movies[sender.tag])
+        sender.isSelected = !sender.isSelected
     }
 }
 
 // MARK: - Collection view delegate
 extension MoviesController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        self.coordinator?.show(self.movies[indexPath.row])
+        self.coordinator?.show(self.movies[indexPath.row])
     }
     
     func collectionView(_ collectionView: UICollectionView,

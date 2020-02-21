@@ -16,7 +16,11 @@ class Movie {
     let posterPath: String?
     var posterImage: UIImage?
     let genres: Set<String>
-    var isFavorite: Bool
+    var isFavorite: Bool {
+        didSet {
+            DataRepository().toggle(self.id)
+        }
+    }
     
     init(movie: MovieDTO) {
         let dataRepository = DataRepository()

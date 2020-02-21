@@ -11,7 +11,7 @@ import UIKit
 class MovieDetailScreen: UIView {
     // MARK: - Subviews
     lazy var posterImage: UIImageView = {
-        let view = UIImageView(image: self.movie.posterImage ?? UIImage(named: "PosterUnavailabe"))
+        let view = UIImageView()
         view.contentMode = .scaleAspectFill
         view.layer.masksToBounds = true
         return view
@@ -19,7 +19,6 @@ class MovieDetailScreen: UIView {
     
     lazy var releaseDate: UILabel = {
         let view = UILabel()
-        view.text = self.movie.releaseDate
         view.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         view.textColor = .secondaryLabel
         return view
@@ -27,7 +26,6 @@ class MovieDetailScreen: UIView {
     
     lazy var title: UILabel = {
         let view = UILabel()
-        view.text = self.movie.title
         view.numberOfLines = 3
         view.textColor = .label
         view.font = UIFont.systemFont(ofSize: 28, weight: .heavy)
@@ -40,19 +38,11 @@ class MovieDetailScreen: UIView {
         view.font = UIFont.systemFont(ofSize: 20, weight: .regular)
         view.numberOfLines = 2
         view.lineBreakMode = .byWordWrapping
-        let genres = self.movie.genres.sorted()
-        view.text = genres.dropFirst().reduce(genres[0], { (result, movie) -> String in
-            return "\(result), \(movie)"
-        })
         return view
     }()
     
     lazy var favoriteButton: UIButton = {
         let button = FavoriteButton(baseTintColor: .label)
-        button.isSelected = self.movie.isFavorite
-        button.addTarget(self,
-                         action: #selector(didFavoriteMovie),
-                         for: .touchUpInside)
         return button
     }()
     
@@ -64,7 +54,6 @@ class MovieDetailScreen: UIView {
         view.textContainer.lineFragmentPadding = 0
         view.textContainerInset = .zero
         view.textColor = .label
-        view.text = self.movie.synopsis
         return view
     }()
     
@@ -84,30 +73,15 @@ class MovieDetailScreen: UIView {
         return container
     }()
     
-    // MARK: - Attributes
-    let movie: Movie
-    
     // MARK: - Initializers
     required init(frame: CGRect = .zero, movie: Movie) {
-        self.movie = movie
         super.init(frame: frame)
         self.setupView()
+        self.setupContent(with: movie)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    // MARK: - Favorite
-    @objc func didFavoriteMovie() {
-        self.favoriteButton.isSelected = !self.favoriteButton.isSelected
-        self.movie.isFavorite = !self.movie.isFavorite
-        let dataRepository = DataRepository()
-        if self.favoriteButton.isSelected {
-            dataRepository.add(self.movie.id)
-        } else {
-            dataRepository.remove(self.movie.id)
-        }
     }
 }
 
@@ -159,5 +133,17 @@ extension MovieDetailScreen: CodeView {
     
     func setupAdditionalConfiguration() {
         self.backgroundColor = .systemGray6
+    }
+    
+    func setupContent(with movie: Movie) {
+        self.posterImage.image = movie.posterImage ?? UIImage(named: "PosterUnavailabe")
+        self.releaseDate.text = movie.releaseDate
+        self.title.text = movie.title
+        let genres = movie.genres.sorted()
+        self.genres.text = genres.dropFirst().reduce(genres[0], { (result, movie) -> String in
+            return "\(result), \(movie)"
+        })
+        self.favoriteButton.isSelected = movie.isFavorite
+        self.synopsis.text = movie.synopsis
     }
 }

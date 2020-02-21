@@ -8,14 +8,13 @@
 
 import UIKit
 
-protocol BaseCoordinator: class {
-        
+protocol BaseCoordinator: AnyObject {
     var childCoordinators: [Coordinator] { get set }
     func start()
 }
 
 // MARK: - Handle creation and deletion of coordinators
-extension Coordinator {
+extension BaseCoordinator {
     func add(_ childCoordinator: Coordinator) {
         self.childCoordinators.append(childCoordinator)
     }

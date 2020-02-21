@@ -32,9 +32,6 @@ class MovieCell: UICollectionViewCell {
     
     lazy var favoriteButton: UIButton = {
         let button = FavoriteButton(baseTintColor: .white)
-        button.addTarget(self,
-                         action: #selector(didFavoriteMovie),
-                         for: .touchUpInside)
         return button
     }()
     
@@ -48,9 +45,6 @@ class MovieCell: UICollectionViewCell {
         return stack
     }()
     
-    // MARK: - Attributes
-    var movie: Movie?
-    
     // MARK: - Initializers
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -63,7 +57,6 @@ class MovieCell: UICollectionViewCell {
     
     // MARK: - Setup cell content
     func setup(with movie: Movie) {
-        self.movie = movie
         self.title.text = movie.title
         self.favoriteButton.isSelected = movie.isFavorite
         let dataRespository = DataRepository()
@@ -84,23 +77,6 @@ class MovieCell: UICollectionViewCell {
         self.posterImage.image = nil
         self.title.text = nil
         self.favoriteButton.isSelected = false
-    }
-    
-    // MARK: - Favorite
-    @objc func didFavoriteMovie() {
-        guard let movie = self.movie else {
-            return
-        }
-        
-        self.favoriteButton.isSelected = !self.favoriteButton.isSelected
-        let dataRepository = DataRepository()
-        movie.isFavorite = !movie.isFavorite
-        
-        if self.favoriteButton.isSelected {
-            dataRepository.add(movie.id)
-        } else {
-            dataRepository.remove(movie.id)
-        }
     }
 }
 

@@ -23,7 +23,12 @@ class MoviesCoordinator: Coordinator {
     
     func start() {
         let moviesController = MoviesController()
+        moviesController.coordinator = self
         moviesController.tabBarItem = UITabBarItem(tabBarSystemItem: .search, tag: 0)
         self.rootController.pushViewController(moviesController, animated: true)
     }
 }
+
+extension MoviesCoordinator: MovieDetailDelegate { }
+
+extension MoviesCoordinator: MovieFavoriteDelegate { }
